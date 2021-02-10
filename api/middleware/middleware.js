@@ -1,14 +1,13 @@
 function logger(req, res, next) {
   console.log(
     `[${new Date().toISOString()}] ${req.method} to ${req.url} from ${req.get(
-      "Origin"
+      "origin"
     )}`
   );
+  next();
 }
 
-function validateUserId(req, res, next) {
-  // do your magic!
-}
+function validateUserId(req, res, next) {}
 
 function validateUser(req, res, next) {
   // do your magic!

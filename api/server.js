@@ -3,9 +3,11 @@ const server = express();
 server.use(express.json());
 
 const postRouter = require("../api/posts/posts-router");
+const userRouter = require("../api/users/users-router");
 
-// global middlewares and routes need to be connected here
-server.use("/api/posts", postRouter);
+const { logger } = require("./middleware/middleware");
+server.use("/api/posts", logger, postRouter);
+server.use("/api/users", logger, userRouter);
 
 server.get("/", (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`);
