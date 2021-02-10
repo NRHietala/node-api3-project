@@ -1,8 +1,6 @@
 const express = require("express");
 const Post = require("./posts-model");
 
-const { validatePost } = require("../middleware/middleware");
-
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
@@ -13,9 +11,17 @@ router.get("/", (req, res, next) => {
     });
 });
 
-router.get("/:id", validatePost, (req, res) => {
-  // do your magic!
-  // this needs a middleware to verify post id
+router.get("/:id", (req, res, next) => {
+  Post.getById(req.params.id)
+    .then(post => {
+      res.status(201).json(post);
+      next();
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: `Server Error: ${error.message}, \n Stack: ${error.stack}`,
+      });
+    });
 });
 
 module.exports = router;

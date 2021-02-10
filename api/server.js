@@ -6,6 +6,7 @@ const postRouter = require("../api/posts/posts-router");
 const userRouter = require("../api/users/users-router");
 
 const { logger } = require("./middleware/middleware");
+
 server.use("/api/posts", logger, postRouter);
 server.use("/api/users", logger, userRouter);
 
