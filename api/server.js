@@ -1,12 +1,13 @@
-const express = require('express');
-
+const express = require("express");
 const server = express();
+server.use(express.json());
 
-// remember express by default cannot parse JSON in request bodies
+const postRouter = require("../api/posts/posts-router");
 
 // global middlewares and routes need to be connected here
+server.use("/api/posts", postRouter);
 
-server.get('/', (req, res) => {
+server.get("/", (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`);
 });
 
