@@ -24,4 +24,12 @@ router.get("/:id", (req, res, next) => {
     });
 });
 
+router.use((error, req, res, next) => {
+  res.status(500).json({
+    info: "something horrible happened inside postsRouter",
+    message: error.message,
+    stack: error.stack,
+  });
+});
+
 module.exports = router;
