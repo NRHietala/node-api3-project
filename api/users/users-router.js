@@ -1,5 +1,7 @@
 const express = require("express");
 
+const Post = require("../posts/posts-model");
+
 const {
   validateUser,
   validateUserId,
@@ -62,13 +64,18 @@ router.get("/:id/posts", validateUserId, (req, res, next) => {
     .catch(error => {
       next(error);
     });
-  // this needs a middleware to verify user id
 });
 
-router.post("/:id/posts", (req, res, next) => {
-  // do your magic!
-  // this needs a middleware to verify user id
-  // and another middleware to check that the request body is valid
+router.post("/:id/posts", validateUserId, validatePost, (req, res, next) => {
+  const messageInfo = { user_id: req.params.id, ...req.body };
+
+  Post.insert(messageInfo)
+    .then(post => {
+      res.status(201).json(post);
+    })
+    .catch(error => {
+      next(error);
+    });
 });
 
 router.use((error, req, res, next) => {

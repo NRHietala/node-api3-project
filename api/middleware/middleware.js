@@ -24,25 +24,19 @@ async function validateUserId(req, res, next) {
   }
 }
 
-async function validateUser(req, res, next) {
-  try {
-    const user = await Users.get(req.body);
-    if (user) {
-      req.user = user;
-      next();
-    } else {
-      res.status(404).json(`user with id ${req.body} not found`);
-    }
-  } catch (error) {
-    res.status(500).json("Could not validate user");
+function validateUser(req, res, next) {
+  if (req.body.name) {
+    next();
+  } else {
+    res.status(400).json({ message: "Missing required name field" });
   }
 }
 
 function validatePost(req, res, next) {
-  if (req.body.name) {
+  if (req.body.text) {
     next();
   } else {
-    res.status(400).json({ message: "Please fill out all fields" });
+    res.status(400).json({ message: "Missing required text field" });
   }
 }
 
