@@ -1,5 +1,7 @@
 const express = require("express");
+const router = express.Router();
 
+const User = require("./users-model");
 const Post = require("../posts/posts-model");
 
 const {
@@ -8,27 +10,17 @@ const {
   validatePost,
 } = require("../middleware/middleware");
 
-const User = require("./users-model");
-
-const router = express.Router();
-
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   User.get()
     .then(user => res.status(200).json(user))
-    .catch(error => {
-      console.log(error);
-    });
+    .catch(error => next(error));
 });
 
 router.get("/:id", validateUserId, (req, res, next) => {
-  User.getById(req.params.id)
-    .then(users => res.status(200).json(users))
-    .catch(error => {
-      next(error);
-    });
+  res.status(200).json(req.user);
 });
 
-router.post("/", validatePost, (req, res, next) => {
+router.post("/", validateUser, (req, res, next) => {
   User.insert(req.body)
     .then(user => res.status(201).json(user))
     .catch(error => {
@@ -80,7 +72,7 @@ router.post("/:id/posts", validateUserId, validatePost, (req, res, next) => {
 
 router.use((error, req, res, next) => {
   res.status(500).json({
-    info: "something horrible happened inside UserRouter",
+    info: "Error occured inside UserRouter",
     message: error.message,
     stack: error.stack,
   });
